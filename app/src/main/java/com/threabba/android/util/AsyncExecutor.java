@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 
 /**
  * Created by jun on 16. 12. 4.
+ * ref : http://javacan.tistory.com/entry/maintainable-async-processing-code-based-on-AsyncTask
  */
 
 public class AsyncExecutor<T> extends AsyncTask<Void, Void, T> {

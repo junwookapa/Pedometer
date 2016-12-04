@@ -9,7 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by junwoo on 2016-12-02.
+ * 스텝 발생 함수 클래스
+ * 출처 : https://github.com/bagilevi/android-pedometer
  */
 
 public class StepDetector implements SensorEventListener {
@@ -45,6 +46,7 @@ public class StepDetector implements SensorEventListener {
     }
 
     //public void onSensorChanged(int sensor, float[] values) {
+
     public void onSensorChanged(SensorEvent event) {
         Sensor sensor = event.sensor;
         synchronized (this) {

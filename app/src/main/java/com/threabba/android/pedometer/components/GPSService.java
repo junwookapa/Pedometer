@@ -47,6 +47,10 @@ public class GPSService extends Service implements LocationListener {
     public static final int MESSAGE_NO_RESULT_FOUND = 0X1005;
     public static final int MESSAGE_UNKNOWN_ERROR = 0X1006;
 
+    /**
+     * 1. 생명 주기 관리
+     * **/
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -77,7 +81,6 @@ public class GPSService extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(final Location location) {
-        Log.d("들어옴", "들어옴");
         if(mCallBack != null && location != null){
             if(!((App)getApplication()).isNetworkConnected()){
                 mCallBack.onUpdateAddress(null, MESSAGE_NETWORK_DISCONNECT);
@@ -100,7 +103,12 @@ public class GPSService extends Service implements LocationListener {
         }
     }
 
-    public boolean registerLocation() {
+    /**
+     * 2. 로케이션 관련
+     * **/
+
+
+    public boolean registerLocation() { //로케이션 등록
         boolean isenable= false;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d("권한 막힘", "권한막힘");
@@ -176,7 +184,6 @@ public class GPSService extends Service implements LocationListener {
                     onLocationChanged(location);
                     return;
                 }
-                Log.d("됐는뎅", "머징..");
             }else {
                 mCallBack.onUpdateAddress("", MESSAGE_LOCATION_DISABLE);
                 return;
@@ -184,6 +191,10 @@ public class GPSService extends Service implements LocationListener {
 
 
     }
+
+    /**
+     * 4. 콜백 관련
+     * **/
     public void unRegisterCallBack(){
         this.mCallBack = null;
     }

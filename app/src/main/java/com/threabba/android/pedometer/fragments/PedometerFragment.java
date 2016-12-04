@@ -29,61 +29,24 @@ import butterknife.OnClick;
 public class PedometerFragment extends Fragment{
 
     private CallBack mCallback;
-    private View view;
+
+    // 복구시 쓰는 상수
     private final String STEP = "STEP";
     private final String ADDRESS = "ADDRESS";
     private final String DIST = "DIST";
     private final String TOGGLE = "TOGGLE";
 
+    /**
+    * 1. 위젯 관련
+    * **/
+
     @BindView(R.id.frag_main_tv_step) TextView tv_step;
     @BindView(R.id.frag_main_tv_address) TextView tv_address;
     @BindView(R.id.frag_main_tv_dist) TextView tv_dist;
     @BindView(R.id.frag_main_tgbtn_toggle) ToggleButton tgbtn_toggle;
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_main, container, false);
-        ButterKnife.bind(this, view);
-        if(savedInstanceState != null){
-            setAddress(savedInstanceState.getString(ADDRESS));
-            setDist(savedInstanceState.getString(DIST));
-            setStep(savedInstanceState.getString(STEP));
-            setToggle(savedInstanceState.getBoolean(TOGGLE));
-        }else{
-            initView();
-        }
-        return view;
-    }
     @OnClick(R.id.frag_main_tgbtn_toggle)
     void onClick_tgbtn_toggle(){
         mCallback.onClick_tgbtn_toggle(tgbtn_toggle.isChecked());
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mCallback = (CallBack)activity;
-        }catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement MenuButtonClickListener");
-        }
-    }
-
-    private void initView(){
-        setAddress("");
-        setDist("0KM");
-        setStep("0");
-    }
-
-    public interface CallBack{
-        void onClick_tgbtn_toggle(boolean isActive);
-    }
-
-
-    public static PedometerFragment newInstance() {
-        PedometerFragment frag = new PedometerFragment();
-        return frag;
     }
     public void setAddress(String address){
         tv_address.setText(address);
@@ -96,6 +59,49 @@ public class PedometerFragment extends Fragment{
     }
     public void setToggle(boolean toggle){
         tgbtn_toggle.setChecked(toggle);
+    }
+
+    public interface CallBack{
+        void onClick_tgbtn_toggle(boolean isActive);
+    }
+    /**
+     * 1. 생명 주기 관련
+     * **/
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.frag_main, container, false);
+        ButterKnife.bind(this, view);
+        if(savedInstanceState != null){
+            setAddress(savedInstanceState.getString(ADDRESS));
+            setDist(savedInstanceState.getString(DIST));
+            setStep(savedInstanceState.getString(STEP));
+            setToggle(savedInstanceState.getBoolean(TOGGLE));
+        }else{
+            initView();
+        }
+        return view;
+    }
+    public static PedometerFragment newInstance() {
+        PedometerFragment frag = new PedometerFragment();
+        return frag;
+    }
+
+    private void initView(){
+        setAddress("");
+        setDist("0KM");
+        setStep("0");
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallback = (CallBack)activity;
+        }catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement MenuButtonClickListener");
+        }
     }
 
     @Override
@@ -117,4 +123,8 @@ public class PedometerFragment extends Fragment{
         outState.putString(DIST, tv_dist.getText().toString());
         outState.putBoolean(TOGGLE, tgbtn_toggle.isChecked());
     }
+
+
+
+
 }

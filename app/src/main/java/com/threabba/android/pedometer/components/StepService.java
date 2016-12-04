@@ -51,6 +51,10 @@ public class StepService extends Service implements View.OnTouchListener {
     private final DecimalFormat mDecimalFormat = new DecimalFormat("0.##");
     // overay view thread
 
+
+    /**
+     * 1. 생명주기 관리
+     * **/
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
@@ -73,20 +77,6 @@ public class StepService extends Service implements View.OnTouchListener {
     }
 
 
-    private void registerDetector() {
-        mSensor = mSensorManager.getDefaultSensor(
-                Sensor.TYPE_ACCELEROMETER /*|
-            Sensor.TYPE_MAGNETIC_FIELD |
-            Sensor.TYPE_ORIENTATION*/);
-        mSensorManager.registerListener(mStepDetector,
-                mSensor,
-                SensorManager.SENSOR_DELAY_FASTEST);
-    }
-
-    public void registeCallBack(StepListener listener){
-        mStepDetector.addStepListener(listener);
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
@@ -97,8 +87,12 @@ public class StepService extends Service implements View.OnTouchListener {
         super.onDestroy();
     }
 
-    // overay view
+    /**
+     * 2. 오버레이 뷰 관련
+     * 참고 및 출처: https://gist.github.com/bjoernQ
+     * **/
 
+    // 오버레이 뷰 생성
     public void initOverayView(Record record){
         wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
 
@@ -124,7 +118,7 @@ public class StepService extends Service implements View.OnTouchListener {
         mMiniOverlayView.setDist(mDecimalFormat.format(record.getDistance())+"KM");
         mMiniOverlayView.setStep(record.getStep_count()+"");
     }
-
+    // 오버레이 뷰 제거
     public void finishOverayView(){
         if (mMiniOverlayView != null) {
             wm.removeView(mMiniOverlayView);
@@ -136,6 +130,7 @@ public class StepService extends Service implements View.OnTouchListener {
         mIsActiveOveray =false;
     }
 
+    // 터치 이벤트
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
@@ -186,6 +181,12 @@ public class StepService extends Service implements View.OnTouchListener {
 
         return false;
     }
+    public boolean isOverrayActive(){
+        return this.mIsActiveOveray;
+    }
+    /**
+     * 3. 스텝 관련
+     * **/
 
     StepListener stepListener = new StepListener() {
         @Override
@@ -214,7 +215,19 @@ public class StepService extends Service implements View.OnTouchListener {
 
         }
     };
-    public boolean isOverrayActive(){
-        return this.mIsActiveOveray;
+
+    private void registerDetector() {
+        mSensor = mSensorManager.getDefaultSensor(
+                Sensor.TYPE_ACCELEROMETER /*|
+            Sensor.TYPE_MAGNETIC_FIELD |
+            Sensor.TYPE_ORIENTATION*/);
+        mSensorManager.registerListener(mStepDetector,
+                mSensor,
+                SensorManager.SENSOR_DELAY_FASTEST);
     }
+
+    public void registeCallBack(StepListener listener){
+        mStepDetector.addStepListener(listener);
+    }
+
 }

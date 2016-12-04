@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class HttpUtil {
 
-    // http 요청
+    // http 요청 get함수
     public static String connHttpGet(String addr, Map<String, String> params){
         StringBuffer response = new StringBuffer();
         try {
