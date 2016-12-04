@@ -1,6 +1,6 @@
 1. 참고 사이트
 
--1.1.https://gist.github.com/bjoernQ/6975256 always showing service
+1.1.https://gist.github.com/bjoernQ/6975256 always showing service
 -1.2. http://isntyet.tistory.com/97 오버레이 권한 6.xx 버전에서 문제 생김 주의
 -1.3. http://blog.daum.net/mailss/20 출저
 -1.4. http://egloos.zum.com/louienine9/v/9453346 안드로이드 화면 온오프 받아오기

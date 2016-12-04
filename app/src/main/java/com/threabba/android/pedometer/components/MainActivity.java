@@ -7,15 +7,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PersistableBundle;
+import android.provider.Settings;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -125,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
                 .setRationaleMessage("we need permission for read contact, find your location and system alert window")
                 .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
                 .setGotoSettingButtonText("setting")
-                .setPermissions(Manifest.permission.BODY_SENSORS,
+                .setPermissions(
                         Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.SYSTEM_ALERT_WINDOW)
                 .check();
 
@@ -204,17 +208,26 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
     @Override
     protected void onPause() {
         super.onPause();
-
-
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if(Settings.canDrawOverlays(this)){
+                if(isStepServiceBound && !mStepService.isOverrayActive() && mIsActiveStep){
+                    mStepService.initOverayView(mRecord);
+                }
+            }
+        }else{
+            if(isStepServiceBound && !mStepService.isOverrayActive() && mIsActiveStep){
+                mStepService.initOverayView(mRecord);
+            }
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mToast.cancel();
-        if(isStepServiceBound && !mStepService.isOverrayActive() && mIsActiveStep){
-            mStepService.initOverayView(mRecord);
-        }
+
+
+
     }
 
     @Override
