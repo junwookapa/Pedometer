@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dummy"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="현재위치\n경기도 성남시 분당구 정자 1동"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/frag_main_tv_address"
+        android:gravity="center"
+        android:layout_above="@+id/dummy"
+        android:layout_centerHorizontal="true" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/frag_main_tgbtn_toggle"
+        android:layout_below="@+id/dummy"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/footsteps"
+        android:id="@+id/imageView"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="50dp" />
+
+    <TextView
+        android:text="5.1 km"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/frag_main_tv_dist"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="9876"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/frag_main_tv_step"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_below="@+id/imageView"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>
