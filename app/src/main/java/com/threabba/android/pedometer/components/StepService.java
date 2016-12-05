@@ -33,12 +33,10 @@ public class StepService extends Service implements View.OnTouchListener {
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private StepDetector mStepDetector;
-    private DaoSession mDaoSession;
     final IBinder mBinder = new StepServiceBinder();
 
     // overay view value
     private boolean mIsActiveOveray;
-    private Record mRecord;
     private View topLeftView;
 
     private StepMiniView mMiniOverlayView;
@@ -49,6 +47,7 @@ public class StepService extends Service implements View.OnTouchListener {
     private boolean moving;
     private WindowManager wm;
     private final DecimalFormat mDecimalFormat = new DecimalFormat("0.##");
+    private App mApp;
     // overay view thread
 
 
@@ -72,8 +71,8 @@ public class StepService extends Service implements View.OnTouchListener {
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         registerDetector();
         mIsActiveOveray =false;
-        mDaoSession = ((App)getApplication()).getDaoSession();
         mStepDetector.addStepListener(stepListener);
+        mApp = (App)getApplication();
     }
 
 
@@ -94,7 +93,7 @@ public class StepService extends Service implements View.OnTouchListener {
      * **/
 
     // 오버레이 뷰 생성
-    public void initOverayView(Record record){
+    public void initOverayView(){
         wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
 
         mMiniOverlayView = new StepMiniView(this);
@@ -114,23 +113,21 @@ public class StepService extends Service implements View.OnTouchListener {
         topLeftParams.width = 0;
         topLeftParams.height = 0;
         wm.addView(topLeftView, topLeftParams);
-        mRecord = record;
         mIsActiveOveray =true;
+        Record record = mApp.getRecord();
         mMiniOverlayView.setDist(mDecimalFormat.format(record.getDistance())+"KM");
         mMiniOverlayView.setStep(record.getStep_count()+"");
     }
     // 오버레이 뷰 제거
-    public Record finishOverayView(){
+    public void finishOverayView(){
         if (mMiniOverlayView != null) {
             wm.removeView(mMiniOverlayView);
             wm.removeView(topLeftView);
             mMiniOverlayView = null;
             topLeftView = null;
         }
-
+        mApp.updateRecord();
         mIsActiveOveray =false;
-        DBManager.update(mDaoSession, mRecord);
-        return mRecord;
     }
 
     // 터치 이벤트
@@ -194,18 +191,14 @@ public class StepService extends Service implements View.OnTouchListener {
     StepListener stepListener = new StepListener() {
         @Override
         public void onStep() {
-            if(mRecord != null && mIsActiveOveray) {
-                int stepCnt = mRecord.getStep_count() + 1;
-                float distance = stepCnt * Const.STEP_PER_KM;
-                mRecord.setStep_count(stepCnt);
-                mRecord.setDistance(distance);
-                mMiniOverlayView.setDist(mDecimalFormat.format(distance)+"KM");
-                mMiniOverlayView.setStep(stepCnt+"");
+            if(mIsActiveOveray) {
+                mApp.onStep();
+                Record record = mApp.getRecord();
+                mMiniOverlayView.setDist(mDecimalFormat.format(record.getDistance())+"KM");
+                mMiniOverlayView.setStep(record.getStep_count()+"");
 
-                if (stepCnt % 30 == 0) { // 30번마다 한번씩 저장
-                    if (!DBManager.update(mDaoSession, mRecord)) {
-                        mRecord = DBManager.getRecord(mDaoSession);
-                    }
+                if (record.getStep_count() % 30 == 0) { // 30번마다 한번씩 저장
+                    mApp.updateRecord();
                 }
 
             }else{

@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.threabba.android.config.Const;
+import com.threabba.android.pedometer.db.DBManager;
 import com.threabba.android.pedometer.db.DaoMaster;
 import com.threabba.android.pedometer.db.DaoSession;
 import com.threabba.android.pedometer.db.Record;
@@ -22,13 +23,14 @@ public class App extends Application{
     //private AbstractDaoSession daoSession;
     private final String DB_NAME ="pedometer" ;
     private DaoSession mDaoSession;
-
+    private Record mRecord;
 
 
     @Override
     public void onCreate() {
         super.onCreate();
         initDB();
+        mRecord = getRecord();
     }
 
     private void initDB(){
@@ -72,6 +74,26 @@ public class App extends Application{
         }else{
             return false;
         }
+    }
+
+    public Record getRecord(){
+        if(mRecord == null){
+            return DBManager.getRecord(mDaoSession);
+        }else{
+            return mRecord;
+        }
+
+    }
+    public void updateRecord(){
+        if(!DBManager.update(mDaoSession, mRecord)){
+            mRecord = DBManager.getRecord(mDaoSession);
+        }
+    }
+    public void onStep(){
+        int step = mRecord.getStep_count()+1;
+        mRecord.setStep_count(step);
+        float distance = step * Const.STEP_PER_KM;
+        mRecord.setDistance(distance);
     }
 
 }

@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
     private DaoSession mDaoSession;
     private App mApp;
     private static final String RECORD = "RECORD";
-    private Record mRecord;
+    //private Record mRecord;
     private static final String ACTIVE = "ACTIVE";
     private boolean mIsActiveStep;
     // 서비스
@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
 /*
         mPedometerFragment = (PedometerFragment) pagerAdapter.getItem(IDX_PEDOMETER_FRAGMENT);
         mRecordFragment = (RecordFragment) pagerAdapter.getItem(IDX_RECORD_FRAGMENT);*/
-        mRecord = DBManager.getRecord(mDaoSession);
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 
         Intent intent = new Intent(this, StepService.class);
@@ -190,11 +189,7 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
     protected void onResume() {
         super.onResume();
         if (isStepServiceBound && mStepService.isOverrayActive()) {
-            mRecord = mStepService.finishOverayView();
-            if(mRecord.getStep_count()>0) {
-                mRecord.setStep_count(mRecord.getStep_count() - 1);
-                stepListener.onStep();
-            }
+            mStepService.finishOverayView();
         }
     }
 
@@ -204,14 +199,12 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (Settings.canDrawOverlays(this)) {
                 if (isStepServiceBound && !mStepService.isOverrayActive() && mIsActiveStep) {
-                    mStepService.initOverayView(mRecord);
-                    DBManager.update(mDaoSession, mRecord);
+                    mStepService.initOverayView();
                 }
             }
         } else {
             if (isStepServiceBound && !mStepService.isOverrayActive() && mIsActiveStep) {
-                mStepService.initOverayView(mRecord);
-                DBManager.update(mDaoSession, mRecord);
+                mStepService.initOverayView();
             }
         }
     }
@@ -238,7 +231,6 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
-            mRecord = savedInstanceState.getParcelable(RECORD);
             mIsActiveStep = savedInstanceState.getBoolean(ACTIVE);
         }
     }
@@ -246,14 +238,12 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(RECORD, mRecord);
         outState.putBoolean(ACTIVE, mIsActiveStep);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        outState.putParcelable(RECORD, mRecord);
         outState.putBoolean(ACTIVE, mIsActiveStep);
     }
 
@@ -261,7 +251,6 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
     public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onRestoreInstanceState(savedInstanceState, persistentState);
         if (savedInstanceState != null) {
-            mRecord = savedInstanceState.getParcelable(RECORD);
             mIsActiveStep = savedInstanceState.getBoolean(ACTIVE);
         }
     }
@@ -335,17 +324,13 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
     StepListener stepListener = new StepListener() {
         @Override
         public void onStep() { // 스텝 발생 콜백
-            if (mRecord != null && mIsActiveStep && !mStepService.isOverrayActive()) {
-                int stepCnt = mRecord.getStep_count() + 1;
-                float distance = stepCnt * Const.STEP_PER_KM;
-                mRecord.setStep_count(stepCnt);
-                mRecord.setDistance(distance);
-                ((PedometerFragment) pagerAdapter.instantiateItem(viewPager, 0)).setStep((stepCnt) + "");
-                ((PedometerFragment) pagerAdapter.instantiateItem(viewPager, 0)).setDist(mDecimalFormat.format(distance) + "KM");
-                if (stepCnt % 30 == 0) { // 30번마다 한번씩 저장
-                    if (!DBManager.update(mDaoSession, mRecord)) {
-                        mRecord = DBManager.getRecord(mDaoSession);
-                    }
+            if (mIsActiveStep && !mStepService.isOverrayActive()) {
+                mApp.onStep();
+                Record record = mApp.getRecord();
+                ((PedometerFragment) pagerAdapter.instantiateItem(viewPager, 0)).setStep(record.getStep_count() + "");
+                ((PedometerFragment) pagerAdapter.instantiateItem(viewPager, 0)).setDist(mDecimalFormat.format(record.getDistance()) + "KM");
+                if (record.getStep_count() % 30 == 0) { // 30번마다 한번씩 저장
+                    mApp.updateRecord();
                 }
 
                 ((RecordFragment) pagerAdapter.instantiateItem(viewPager, 1)).notifyDataSetChanged(mDaoSession);
