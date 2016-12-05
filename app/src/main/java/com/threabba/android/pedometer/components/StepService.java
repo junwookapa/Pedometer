@@ -120,7 +120,7 @@ public class StepService extends Service implements View.OnTouchListener {
         mMiniOverlayView.setStep(record.getStep_count()+"");
     }
     // 오버레이 뷰 제거
-    public void finishOverayView(){
+    public Record finishOverayView(){
         if (mMiniOverlayView != null) {
             wm.removeView(mMiniOverlayView);
             wm.removeView(topLeftView);
@@ -129,6 +129,8 @@ public class StepService extends Service implements View.OnTouchListener {
         }
 
         mIsActiveOveray =false;
+        DBManager.update(mDaoSession, mRecord);
+        return mRecord;
     }
 
     // 터치 이벤트

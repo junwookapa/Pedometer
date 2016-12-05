@@ -174,9 +174,11 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
 
     }
 
+
+
     @Override
-    public void startActivityForResult(Intent intent, int requestCode, Bundle options) {
-        super.startActivityForResult(intent, requestCode, options);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case Const.GPS_ARELT:
                 bindGpsService();
@@ -184,12 +186,12 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
         if (isStepServiceBound && mStepService.isOverrayActive()) {
-            mStepService.finishOverayView();
+            mRecord = mStepService.finishOverayView();
+            stepListener.onStep();
         }
     }
 
@@ -200,11 +202,13 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
             if (Settings.canDrawOverlays(this)) {
                 if (isStepServiceBound && !mStepService.isOverrayActive() && mIsActiveStep) {
                     mStepService.initOverayView(mRecord);
+                    DBManager.update(mDaoSession, mRecord);
                 }
             }
         } else {
             if (isStepServiceBound && !mStepService.isOverrayActive() && mIsActiveStep) {
                 mStepService.initOverayView(mRecord);
+                DBManager.update(mDaoSession, mRecord);
             }
         }
     }
@@ -328,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
     StepListener stepListener = new StepListener() {
         @Override
         public void onStep() { // 스텝 발생 콜백
-            if (mRecord != null && mIsActiveStep) {
+            if (mRecord != null && mIsActiveStep && !mStepService.isOverrayActive()) {
                 int stepCnt = mRecord.getStep_count() + 1;
                 float distance = stepCnt * Const.STEP_PER_KM;
                 mRecord.setStep_count(stepCnt);
