@@ -191,7 +191,10 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
         super.onResume();
         if (isStepServiceBound && mStepService.isOverrayActive()) {
             mRecord = mStepService.finishOverayView();
-            stepListener.onStep();
+            if(mRecord.getStep_count()>0) {
+                mRecord.setStep_count(mRecord.getStep_count() - 1);
+                stepListener.onStep();
+            }
         }
     }
 
