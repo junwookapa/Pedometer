@@ -38,6 +38,7 @@ public class StepDetector implements SensorEventListener {
 
     private OnStepListener mStepListener;
     private int mStep;
+    private boolean isRunning = false;
     public StepDetector() {
         onInitialize();
     }
@@ -101,15 +102,22 @@ public class StepDetector implements SensorEventListener {
     }
 
     public void start(){
-        SensorManager appSensorManager = App.getSensorManager();
-        Sensor accSensor = appSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        appSensorManager.registerListener(StepDetector.this, accSensor, SensorManager.SENSOR_DELAY_FASTEST);
-        Log.e("스타트", "스타트");
+        if(!isRunning){
+            SensorManager appSensorManager = App.getSensorManager();
+            Sensor accSensor = appSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            appSensorManager.registerListener(StepDetector.this, accSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            Log.e("스타트", "스타트");
+            isRunning = true;
+        }
     }
 
     public void stop(){
-        SensorManager appSensorManager = App.getSensorManager();
-        appSensorManager.unregisterListener(StepDetector.this);
+        if(!isRunning){
+            Log.e("정지", "정지");
+            isRunning = false;
+            SensorManager appSensorManager = App.getSensorManager();
+            appSensorManager.unregisterListener(StepDetector.this);
+        }
     }
 
     public void setStepListener(OnStepListener listener){

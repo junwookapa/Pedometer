@@ -16,10 +16,6 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by ETRI LSAR Project Team on 2018-03-12.
- */
-
 public class NaverAPIBuilder {
     private static final String baseURL ="https://openapi.naver.com";
     private static Retrofit retrofit;
@@ -31,8 +27,8 @@ public class NaverAPIBuilder {
             public Response intercept(Chain chain) throws IOException {
                 Request originalReq = chain.request();
                 Request.Builder requestBuilder = originalReq.newBuilder()
-                        .addHeader("X-Naver-Client-Id", App.getRes().getString(R.string.API_NAVER_CLIENT_ID))
-                        .addHeader("X-Naver-Client-Secret", App.getRes().getString(R.string.API_NAVER_CLIENT_SECRET));
+                        .addHeader("X-Naver-Client-Id", App.getRes().getString(R.string.api_naver_client_id))
+                        .addHeader("X-Naver-Client-Secret", App.getRes().getString(R.string.api_naver_client_secret));
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }

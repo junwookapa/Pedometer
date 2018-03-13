@@ -1,10 +1,11 @@
 package com.threabba.android2.main;
 
-import io.reactivex.Observable;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
-/**
- * Created by ETRI LSAR Project Team on 2018-03-12.
- */
+import java.lang.ref.WeakReference;
+
+import io.reactivex.Observable;
 
 public class MainContract {
 
@@ -15,5 +16,22 @@ public class MainContract {
     public interface Presenter{
         void onInitialize();
         Observable<Integer> getStepObserver();
+    }
+
+    public static <T extends Fragment & MainContract.View> Fragment createFragment(Class<T> clazz, Presenter presenter){
+        try{
+            Bundle args = new Bundle();
+            T instance = new WeakReference<>(clazz.newInstance()).get();
+            instance.setPresenter(presenter);
+            instance.setArguments(args);
+            return instance;
+
+        }catch (IllegalAccessException e){
+            e.printStackTrace();
+        }catch (InstantiationException e){
+            e.printStackTrace();
+        }
+        return null;
+
     }
 }

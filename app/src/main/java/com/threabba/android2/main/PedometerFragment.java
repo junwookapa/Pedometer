@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,13 @@ import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 
-/**
- * Created by ETRI LSAR Project Team on 2018-03-13.
- */
-
 public class PedometerFragment extends Fragment implements MainContract.View{
+
+
+    private MainContract.Presenter mPresenter;
+
     // 복구시 쓰는 상수
+    private final String Presenter = "PRESENTER";
     private final String STEP = "STEP";
     private final String ADDRESS = "ADDRESS";
     private final String DIST = "DIST";
@@ -34,28 +36,15 @@ public class PedometerFragment extends Fragment implements MainContract.View{
      * 1. 위젯 관련
      * **/
 
-    @BindView(R.id.frag_main_tv_step)
-    TextView tv_step;
+    @BindView(R.id.frag_main_tv_step) TextView tv_step;
     @BindView(R.id.frag_main_tv_address) TextView tv_address;
     @BindView(R.id.frag_main_tv_dist) TextView tv_dist;
-    @BindView(R.id.frag_main_tgbtn_toggle)
-    ToggleButton tgbtn_toggle;
+    @BindView(R.id.frag_main_tgbtn_toggle) ToggleButton tgbtn_toggle;
     @OnClick(R.id.frag_main_tgbtn_toggle)
     void onClick_tgbtn_toggle(){
 
     }
-    public void setAddress(String address){
-        tv_address.setText(address);
-    }
-    public void setDist(String dist){
-        tv_dist.setText(dist);
-    }
-    public void setStep(String step){
-        tv_step.setText(step);
-    }
-    public void setToggle(boolean toggle){
-        tgbtn_toggle.setChecked(toggle);
-    }
+
 
     /**
      * 1. 생명 주기 관련
@@ -66,10 +55,10 @@ public class PedometerFragment extends Fragment implements MainContract.View{
         View view = inflater.inflate(R.layout.frag_main, container, false);
         ButterKnife.bind(this, view);
         if(savedInstanceState != null){
-            setAddress(savedInstanceState.getString(ADDRESS));
-            setDist(savedInstanceState.getString(DIST));
-            setStep(savedInstanceState.getString(STEP));
-            setToggle(savedInstanceState.getBoolean(TOGGLE));
+            tv_address.setText(savedInstanceState.getString(ADDRESS));
+            tv_dist.setText(savedInstanceState.getString(DIST));
+            tv_step.setText(savedInstanceState.getString(STEP));
+            tgbtn_toggle.setChecked(savedInstanceState.getBoolean(TOGGLE));
         }else{
             initView();
         }
@@ -77,25 +66,27 @@ public class PedometerFragment extends Fragment implements MainContract.View{
     }
 
     private void initView(){
-        setAddress("");
-        setDist("0KM");
-        setStep("0");
+        tv_address.setText("");
+        tv_dist.setText("0KM");
+        tv_step.setText("0");
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+
         if(savedInstanceState != null){
-            setAddress(savedInstanceState.getString(ADDRESS));
-            setDist(savedInstanceState.getString(DIST));
-            setStep(savedInstanceState.getString(STEP));
-            setToggle(savedInstanceState.getBoolean(TOGGLE));
+            tv_address.setText(savedInstanceState.getString(ADDRESS));
+            tv_dist.setText(savedInstanceState.getString(DIST));
+            tv_step.setText(savedInstanceState.getString(STEP));
+            tgbtn_toggle.setChecked(savedInstanceState.getBoolean(TOGGLE));
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
         outState.putString(STEP, tv_step.getText().toString());
         outState.putString(ADDRESS, tv_address.getText().toString());
         outState.putString(DIST, tv_dist.getText().toString());
@@ -107,12 +98,12 @@ public class PedometerFragment extends Fragment implements MainContract.View{
         presenter.getStepObserver().subscribe(new Observer<Integer>() {
             @Override
             public void onSubscribe(Disposable d) {
-
+                Log.e("onSubscribe", "onSubscribe : ");
             }
 
             @Override
             public void onNext(Integer integer) {
-                setStep(integer.toString());
+                tv_step.setText(integer.toString());
             }
 
             @Override

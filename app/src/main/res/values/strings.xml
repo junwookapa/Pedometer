@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Pedometer</string>
-    <string name="API_NAVER_CLIENT_ID">u_Dp76cKem2YwxHuYnHF</string>
-    <string name="API_NAVER_CLIENT_SECRET">rOOgMpitqG</string>
+    <string name="db_name">pedometer</string>
+    <string name="api_naver_client_id">u_Dp76cKem2YwxHuYnHF</string>
+    <string name="api_naver_client_secret">rOOgMpitqG</string>
+
+    <string name="tab_pedometer">Pedometer</string>
+    <string name="tab_record">Record</string>
 </resources>

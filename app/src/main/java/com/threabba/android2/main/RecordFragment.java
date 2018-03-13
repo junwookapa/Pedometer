@@ -23,10 +23,6 @@ import butterknife.ButterKnife;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-/**
- * Created by ETRI LSAR Project Team on 2018-03-13.
- */
-
 public class RecordFragment extends Fragment implements MainContract.View{
 
     @BindView(R.id.frg_record_lv_recordlist)
@@ -68,7 +64,7 @@ public class RecordFragment extends Fragment implements MainContract.View{
 
             @Override
             public void onNext(Integer integer) {
-                Toast.makeText(getContext(), integer+"", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override

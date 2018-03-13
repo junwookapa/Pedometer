@@ -1,6 +1,7 @@
 package com.threabba.android2;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,10 +16,6 @@ import com.threabba.android2.main.MainPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by ETRI LSAR Project Team on 2018-03-13.
- */
 
 public abstract class BaseTabActivity extends AppCompatActivity{
 
@@ -43,5 +40,4 @@ public abstract class BaseTabActivity extends AppCompatActivity{
         }
         return mAdapter;
     }
-
 }

@@ -1,22 +1,31 @@
 package com.threabba.android2.main;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.threabba.android2.step.RXStepDetector;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
-/**
- * Created by ETRI LSAR Project Team on 2018-03-13.
- */
-
-public class MainPresenter implements MainContract.Presenter{
+public class MainPresenter implements MainContract.Presenter {
     private Observable<Integer> mStepObserver;
+
+    public MainPresenter(){
+
+    }
+    protected MainPresenter(Parcel in) {
+
+    }
+
     @Override
     public void onInitialize() {
-        mStepObserver = RXStepDetector.createObservable();
+        mStepObserver = RXStepDetector.createObservable().subscribeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable<Integer> getStepObserver() {
         return mStepObserver;
     }
+
 }

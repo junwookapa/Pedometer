@@ -45,7 +45,7 @@ public class App extends Application{
     }
 
     private void initDB(){
-        DaoMaster.DevOpenHelper masterHelper = new DaoMaster.DevOpenHelper(this, Const.DB_NAME, null); //create database db file if not exist
+        DaoMaster.DevOpenHelper masterHelper = new DaoMaster.DevOpenHelper(this, getString(R.string.db_name), null); //create database db file if not exist
         SQLiteDatabase db = masterHelper.getWritableDatabase();  //get the created database db file
         DaoMaster master = new DaoMaster(db);//create masterDao
         this.mDaoSession =master.newSession(); //Creates Session session

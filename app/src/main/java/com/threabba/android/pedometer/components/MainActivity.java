@@ -232,12 +232,6 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        outState.putBoolean(ACTIVE, mIsActiveStep);
-    }
-
-    @Override
     public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onRestoreInstanceState(savedInstanceState, persistentState);
         if (savedInstanceState != null) {
