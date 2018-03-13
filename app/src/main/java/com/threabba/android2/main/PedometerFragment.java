@@ -1,4 +1,5 @@
-package com.threabba.android.pedometer.fragments;
+package com.threabba.android2.main;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,27 +10,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.threabba.android.pedometer.App;
 import com.threabba.android.pedometer.R;
-import com.threabba.android.pedometer.db.DaoSession;
-import com.threabba.android.pedometer.db.Record;
-import com.threabba.android.pedometer.db.RecordDao;
-
-import java.text.DecimalFormat;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
 
 /**
- * Created by jun on 16. 12. 3.
+ * Created by ETRI LSAR Project Team on 2018-03-13.
  */
 
-public class PedometerFragment extends Fragment{
-
-    private CallBack mCallback;
-
+public class PedometerFragment extends Fragment implements MainContract.View{
     // 복구시 쓰는 상수
     private final String STEP = "STEP";
     private final String ADDRESS = "ADDRESS";
@@ -37,16 +31,18 @@ public class PedometerFragment extends Fragment{
     private final String TOGGLE = "TOGGLE";
 
     /**
-    * 1. 위젯 관련
-    * **/
+     * 1. 위젯 관련
+     * **/
 
-    @BindView(R.id.frag_main_tv_step) TextView tv_step;
+    @BindView(R.id.frag_main_tv_step)
+    TextView tv_step;
     @BindView(R.id.frag_main_tv_address) TextView tv_address;
     @BindView(R.id.frag_main_tv_dist) TextView tv_dist;
-    @BindView(R.id.frag_main_tgbtn_toggle) ToggleButton tgbtn_toggle;
+    @BindView(R.id.frag_main_tgbtn_toggle)
+    ToggleButton tgbtn_toggle;
     @OnClick(R.id.frag_main_tgbtn_toggle)
     void onClick_tgbtn_toggle(){
-        mCallback.onClick_tgbtn_toggle(tgbtn_toggle.isChecked());
+
     }
     public void setAddress(String address){
         tv_address.setText(address);
@@ -61,9 +57,6 @@ public class PedometerFragment extends Fragment{
         tgbtn_toggle.setChecked(toggle);
     }
 
-    public interface CallBack{
-        void onClick_tgbtn_toggle(boolean isActive);
-    }
     /**
      * 1. 생명 주기 관련
      * **/
@@ -89,17 +82,6 @@ public class PedometerFragment extends Fragment{
         setStep("0");
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mCallback = (CallBack)activity;
-        }catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement MenuButtonClickListener");
-        }
-    }
-
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
@@ -120,7 +102,28 @@ public class PedometerFragment extends Fragment{
         outState.putBoolean(TOGGLE, tgbtn_toggle.isChecked());
     }
 
+    @Override
+    public void setPresenter(MainContract.Presenter presenter) {
+        presenter.getStepObserver().subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
 
+            }
 
+            @Override
+            public void onNext(Integer integer) {
+                setStep(integer.toString());
+            }
 
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
 }

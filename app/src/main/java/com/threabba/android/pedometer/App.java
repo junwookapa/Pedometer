@@ -2,7 +2,9 @@ package com.threabba.android.pedometer;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
+import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -24,13 +26,22 @@ public class App extends Application{
     private final String DB_NAME ="pedometer" ;
     private DaoSession mDaoSession;
     private Record mRecord;
-
+    private static App app;
 
     @Override
     public void onCreate() {
         super.onCreate();
         initDB();
         mRecord = getRecord();
+        app = this;
+    }
+    public static SensorManager getSensorManager(){
+        SensorManager sensorManager = (SensorManager) app.getSystemService(Context.SENSOR_SERVICE);
+        return sensorManager;
+    }
+
+    public static Resources getRes(){
+        return app.getResources();
     }
 
     private void initDB(){

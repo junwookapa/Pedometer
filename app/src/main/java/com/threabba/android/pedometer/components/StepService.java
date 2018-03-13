@@ -13,13 +13,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.threabba.android.config.Const;
 import com.threabba.android.pedometer.App;
-import com.threabba.android.pedometer.db.DBManager;
 import com.threabba.android.pedometer.fragments.StepMiniView;
-import com.threabba.android.pedometer.step.StepDetector;
-import com.threabba.android.pedometer.step.StepListener;
-import com.threabba.android.pedometer.db.DaoSession;
+import com.threabba.android2.step.StepDetector;
 import com.threabba.android.pedometer.db.Record;
 
 import java.text.DecimalFormat;
@@ -71,7 +67,6 @@ public class StepService extends Service implements View.OnTouchListener {
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         registerDetector();
         mIsActiveOveray =false;
-        mStepDetector.addStepListener(stepListener);
         mApp = (App)getApplication();
     }
 
@@ -188,29 +183,7 @@ public class StepService extends Service implements View.OnTouchListener {
      * 3. 스텝 관련
      * **/
 
-    StepListener stepListener = new StepListener() {
-        @Override
-        public void onStep() {
-            if(mIsActiveOveray) {
-                mApp.onStep();
-                Record record = mApp.getRecord();
-                mMiniOverlayView.setDist(mDecimalFormat.format(record.getDistance())+"KM");
-                mMiniOverlayView.setStep(record.getStep_count()+"");
 
-                if (record.getStep_count() % 30 == 0) { // 30번마다 한번씩 저장
-                    mApp.updateRecord();
-                }
-
-            }else{
-
-            }
-        }
-
-        @Override
-        public void passValue() {
-
-        }
-    };
 
     private void registerDetector() {
         mSensor = mSensorManager.getDefaultSensor(
@@ -222,8 +195,5 @@ public class StepService extends Service implements View.OnTouchListener {
                 SensorManager.SENSOR_DELAY_FASTEST);
     }
 
-    public void registeCallBack(StepListener listener){
-        mStepDetector.addStepListener(listener);
-    }
 
 }

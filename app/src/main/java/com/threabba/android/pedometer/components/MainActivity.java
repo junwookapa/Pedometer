@@ -6,24 +6,17 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PersistableBundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -32,12 +25,10 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.threabba.android.config.Const;
 import com.threabba.android.pedometer.App;
-import com.threabba.android.pedometer.db.DBManager;
 import com.threabba.android.pedometer.R;
 import com.threabba.android.pedometer.fragments.PedometerFragment;
 import com.threabba.android.pedometer.fragments.RecordFragment;
 import com.threabba.android.pedometer.fragments.TabPagerAdapter;
-import com.threabba.android.pedometer.step.StepListener;
 import com.threabba.android.pedometer.db.DaoSession;
 import com.threabba.android.pedometer.db.Record;
 
@@ -94,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
             window.setStatusBarColor(Color.BLACK);
         }
         mApp = (App) getApplication();
-
         // Initializing the TabLayout
         tabLayout.addTab(tabLayout.newTab().setText("만보기 화면"));
         tabLayout.addTab(tabLayout.newTab().setText("만보기 기록"));
@@ -129,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
         });
         // Set TabSelectedListener
 
-        new TedPermission(this)
+        TedPermission.with(this)
                 .setPermissionListener(permissionlistener)
                 .setRationaleMessage("we need permission for read contact, find your location and system alert window")
                 .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
@@ -311,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
             mStepService = ((StepService.StepServiceBinder) service).getService();
             if (mStepService != null) {
                 isStepServiceBound = true;
-                mStepService.registeCallBack(stepListener);
+                //mStepService.registeCallBack(stepListener);
             }
         }
 
@@ -321,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
         }
     };
 
-    StepListener stepListener = new StepListener() {
+    /*StepListener stepListener = new StepListener() {
         @Override
         public void onStep() { // 스텝 발생 콜백
             if (mIsActiveStep && !mStepService.isOverrayActive()) {
@@ -343,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements PedometerFragment
         public void passValue() {
 
         }
-    };
+    };*/
 
     @Override
     public void onClick_tgbtn_toggle(boolean isActive) {

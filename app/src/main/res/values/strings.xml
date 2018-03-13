@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Pedometer</string>
+    <string name="API_NAVER_CLIENT_ID">u_Dp76cKem2YwxHuYnHF</string>
+    <string name="API_NAVER_CLIENT_SECRET">rOOgMpitqG</string>
 </resources>

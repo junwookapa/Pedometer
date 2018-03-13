@@ -16,18 +16,19 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.threabba.android.http.AddressVO;
-import com.threabba.android.config.Const;
+import com.threabba.android2.model.Address;
+import com.threabba.android2.http.NaverAPI;
+import com.threabba.android2.http.NaverAPIBuilder;
 import com.threabba.android.pedometer.App;
 import com.threabba.android.util.AsyncCallback;
-import com.threabba.android.util.AsyncExecutor;
-import com.threabba.android.http.HttpUtil;
 
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by jun on 16. 12. 4.
@@ -91,20 +92,26 @@ public class GPSService extends Service implements LocationListener {
                 mCallBack.onUpdateAddress(null, MESSAGE_NETWORK_DISCONNECT);
                 return;
             }
-
-            Callable<String> callable = new Callable<String>() {
-                @Override
-                public String call() throws Exception {
-                    Map<String, String> map = new HashMap<String, String>();
-                    map.put("query", URLEncoder.encode(location.getLongitude()+","+location.getLatitude(), "UTF-8"));
-                    return HttpUtil.connHttpGet(Const.HTTP_GET_URL_REVERSE_GEO, map);
-                }
-            };
-
-            new AsyncExecutor<String>()
-                    .setCallable(callable)
-                    .setCallback(callback)
-                    .execute();
+            Map<String, String> map = new HashMap<>();
+            map.put("query", location.getLongitude()+","+location.getLatitude());
+            NaverAPIBuilder.createAPI(NaverAPI.class)
+                    .getAddress(map)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            new Consumer<Address>() {
+                                @Override
+                                public void accept(Address o) throws Exception {
+                                    if(mCallBack != null){
+                                        mCallBack.onUpdateAddress(o.getResult().getItems().get(0).getAddress(), MESSAGE_SUCCESS);
+                                    }
+                                }
+                            }, new Consumer<Throwable>() {
+                                @Override
+                                public void accept(Throwable throwable) throws Exception {
+                                    mCallBack.onUpdateAddress(null, MESSAGE_NO_RESULT_FOUND);
+                                }
+                            });
         }
     }
 
@@ -212,7 +219,7 @@ public class GPSService extends Service implements LocationListener {
         @Override
         public void onResult(String result) {
             try {
-                AddressVO results = new Gson().fromJson(result, AddressVO.class);
+                Address results = new Gson().fromJson(result, Address.class);
                 if(mCallBack != null){
                     mCallBack.onUpdateAddress(results.getResult().getItems().get(0).getAddress(), MESSAGE_SUCCESS);
                 }
