@@ -24,13 +24,12 @@ import android.widget.Toast;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.threabba.android.config.Const;
-import com.threabba.android.pedometer.App;
+import com.threabba.android2.App;
 import com.threabba.android.pedometer.R;
 import com.threabba.android.pedometer.fragments.PedometerFragment;
 import com.threabba.android.pedometer.fragments.RecordFragment;
 import com.threabba.android.pedometer.fragments.TabPagerAdapter;
 import com.threabba.android.pedometer.db.DaoSession;
-import com.threabba.android.pedometer.db.Record;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

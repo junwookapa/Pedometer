@@ -9,14 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.threabba.android.pedometer.App;
 import com.threabba.android.pedometer.R;
-import com.threabba.android.pedometer.db.DaoSession;
-import com.threabba.android.pedometer.db.Record;
-import com.threabba.android.pedometer.db.RecordDao;
-
-import java.text.DecimalFormat;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

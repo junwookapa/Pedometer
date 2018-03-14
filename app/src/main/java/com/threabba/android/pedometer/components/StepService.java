@@ -13,7 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.threabba.android.pedometer.App;
+import com.threabba.android2.App;
 import com.threabba.android.pedometer.fragments.StepMiniView;
 import com.threabba.android2.step.StepDetector;
 import com.threabba.android.pedometer.db.Record;
@@ -109,9 +109,9 @@ public class StepService extends Service implements View.OnTouchListener {
         topLeftParams.height = 0;
         wm.addView(topLeftView, topLeftParams);
         mIsActiveOveray =true;
-        Record record = mApp.getRecord();
-        mMiniOverlayView.setDist(mDecimalFormat.format(record.getDistance())+"KM");
-        mMiniOverlayView.setStep(record.getStep_count()+"");
+        //Record record = mApp.getRecord();
+        //mMiniOverlayView.setDist(mDecimalFormat.format(record.getDistance())+"KM");
+       // mMiniOverlayView.setStep(record.getStep_count()+"");
     }
     // 오버레이 뷰 제거
     public void finishOverayView(){
@@ -121,7 +121,7 @@ public class StepService extends Service implements View.OnTouchListener {
             mMiniOverlayView = null;
             topLeftView = null;
         }
-        mApp.updateRecord();
+        //mApp.updateRecord();
         mIsActiveOveray =false;
     }
 

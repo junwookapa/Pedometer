@@ -9,13 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.threabba.android.pedometer.App;
+import com.threabba.android2.App;
 import com.threabba.android.pedometer.R;
 import com.threabba.android.pedometer.db.DaoSession;
 import com.threabba.android.pedometer.db.Record;
 import com.threabba.android.pedometer.db.RecordDao;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import butterknife.BindView;

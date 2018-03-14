@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.threabba.android2.model.Address;
 import com.threabba.android2.http.NaverAPI;
 import com.threabba.android2.http.NaverAPIBuilder;
-import com.threabba.android.pedometer.App;
+import com.threabba.android2.App;
 import com.threabba.android.util.AsyncCallback;
 
 import java.util.HashMap;

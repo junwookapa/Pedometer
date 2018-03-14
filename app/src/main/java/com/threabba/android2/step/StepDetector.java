@@ -6,17 +6,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
-import com.threabba.android.pedometer.App;
-
-import org.reactivestreams.Subscriber;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.functions.Cancellable;
+import com.threabba.android2.App;
 
 /**
  * 스텝 발생 함수 클래스

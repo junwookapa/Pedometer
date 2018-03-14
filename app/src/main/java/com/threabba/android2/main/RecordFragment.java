@@ -7,9 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.threabba.android.pedometer.App;
+import com.threabba.android2.App;
 import com.threabba.android.pedometer.R;
 import com.threabba.android.pedometer.db.DaoSession;
 import com.threabba.android.pedometer.db.Record;

@@ -14,9 +14,7 @@ public class MainPresenter implements MainContract.Presenter {
     public MainPresenter(){
 
     }
-    protected MainPresenter(Parcel in) {
 
-    }
 
     @Override
     public void onInitialize() {

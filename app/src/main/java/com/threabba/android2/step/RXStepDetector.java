@@ -14,12 +14,10 @@ import io.reactivex.functions.Cancellable;
 
 public class RXStepDetector extends StepDetector implements ObservableOnSubscribe<Integer> {
 
-    Set<ObservableEmitter<Integer>> mEmitters;
+    private Set<ObservableEmitter<Integer>> mEmitters= new HashSet<>();
     @Override
     public void subscribe(final ObservableEmitter<Integer> emitter) {
-        if(mEmitters == null){
-            mEmitters = new HashSet<>();
-        }
+
         mEmitters.add(emitter);
         setStepListener(new OnStepListener() {
             @Override
