@@ -1,6 +1,5 @@
-package com.threabba.android2.main;
+package com.threabba.android.pedometer.main;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,13 +11,12 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.threabba.android.pedometer.R;
+import com.threabba.android2.model.Address;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observer;
-import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class PedometerFragment extends Fragment implements MainContract.View{
 
@@ -95,26 +93,19 @@ public class PedometerFragment extends Fragment implements MainContract.View{
 
     @Override
     public void setPresenter(MainContract.Presenter presenter) {
-        presenter.getStepObserver().subscribe(new Observer<Integer>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.e("onSubscribe", "onSubscribe : ");
-            }
+        presenter.getStepObserver()
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                (Integer stepCount) -> tv_step.setText(stepCount.toString()),
+                error -> {Log.e("헬로우 노드", "헬로우노드");
+                });
+        presenter.getAddressObserver()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (Address address)->{
+                            tv_address.setText(address.getResult().getItems().get(0).getAddress());
+                        },
+                        error -> {Log.e("헬로우 노드", "헬로우노드 :"+error.getLocalizedMessage());});
 
-            @Override
-            public void onNext(Integer integer) {
-                tv_step.setText(integer.toString());
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
     }
 }

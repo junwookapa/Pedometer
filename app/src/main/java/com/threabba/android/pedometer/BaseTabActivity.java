@@ -1,21 +1,13 @@
-package com.threabba.android2;
+package com.threabba.android.pedometer;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.threabba.android.pedometer.R;
-import com.threabba.android2.main.MainPresenter;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.threabba.android.pedometer.TabAdapter;
 
 public abstract class BaseTabActivity extends AppCompatActivity{
 

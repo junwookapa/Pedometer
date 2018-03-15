@@ -1,4 +1,4 @@
-package com.threabba.android.http;
+package com.threabba.android.pedometer.model;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import java.util.List;
  * Created by jun on 16. 12. 4.
  */
 
-public class AddressVO {
+public class Address {
 
     private Result result;
 

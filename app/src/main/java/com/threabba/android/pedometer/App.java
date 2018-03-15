@@ -1,4 +1,4 @@
-package com.threabba.android2;
+package com.threabba.android.pedometer;
 
 import android.app.Activity;
 import android.app.Application;
@@ -14,10 +14,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
-import com.threabba.android.pedometer.R;
 import com.threabba.android.pedometer.db.DaoMaster;
 import com.threabba.android.pedometer.db.DaoSession;
 import com.threabba.android.pedometer.db.Record;
+import com.threabba.android.pedometer.flaoting.FloatingService;
 
 import io.reactivex.Observable;
 
@@ -35,7 +35,7 @@ public class App extends Application{
     private static App app;
     private boolean isForeGround;
     private RXOnChangedAppSchedulingNotifier mRXOnChangedAppScheduling;
-
+    private Intent mFloatServiceIntent;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -43,7 +43,8 @@ public class App extends Application{
         setScreenOffFilter();
         mRXOnChangedAppScheduling = new RXOnChangedAppSchedulingNotifier();
         app = this;
-
+        mFloatServiceIntent = new Intent(this, FloatingService.class);
+        startService(mFloatServiceIntent);
     }
     @Override
     public void onTrimMemory(int level) {
@@ -53,6 +54,7 @@ public class App extends Application{
             mRXOnChangedAppScheduling.notify(isForeGround);
         }
     }
+
 
     @Override
     public void onTerminate() {
@@ -124,6 +126,7 @@ public class App extends Application{
     }
 
     ActivityLifecycleCallbacks mActivityLifecycleCallbacks = new ActivityLifecycleCallbacks() {
+
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle) {
 

@@ -4,9 +4,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.threabba.android.pedometer.App;
 
 /**
  * 스텝 발생 함수 클래스
@@ -14,6 +14,7 @@ import java.util.Set;
  */
 
 public class StepDetector implements SensorEventListener {
+
     private final static String TAG = "StepDetector";
     private float   mLimit = 10;
     private float   mLastValues[] = new float[3*2];
@@ -25,34 +26,26 @@ public class StepDetector implements SensorEventListener {
     private float   mLastDiff[] = new float[3*2];
     private int     mLastMatch = -1;
 
-    private Set<StepListener> mStepListeners = new HashSet<>();
-
+    private OnStepListener mStepListener;
+    private int mStep;
+    private boolean isRunning = false;
     public StepDetector() {
+        onInitialize();
+    }
+
+    private void onInitialize(){
         int h = 480; // TODO: remove this constant
         mYOffset = h * 0.5f;
         mScale[0] = - (h * 0.5f * (1.0f / (SensorManager.STANDARD_GRAVITY * 2)));
         mScale[1] = - (h * 0.5f * (1.0f / (SensorManager.MAGNETIC_FIELD_EARTH_MAX)));
     }
 
-    public void setSensitivity(float sensitivity) {
-        mLimit = sensitivity; // 1.97  2.96  4.44  6.66  10.00  15.00  22.50  33.75  50.62
-    }
-
-    public void addStepListener(StepListener sl) {
-        mStepListeners.add(sl);
-    }
-    public void removeStepListener(StepListener sl) {
-        mStepListeners.remove(sl);
-    }
-
     //public void onSensorChanged(int sensor, float[] values) {
-
+    @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor sensor = event.sensor;
         synchronized (this) {
-            if (sensor.getType() == Sensor.TYPE_ORIENTATION) {
-            }
-            else {
+            if(sensor.getType() == Sensor.TYPE_ACCELEROMETER && mStepListener != null) {
                 int j = (sensor.getType() == Sensor.TYPE_ACCELEROMETER) ? 1 : 0;
                 if (j == 1) {
                     float vSum = 0;
@@ -77,9 +70,7 @@ public class StepDetector implements SensorEventListener {
                             boolean isNotContra = (mLastMatch != 1 - extType);
 
                             if (isAlmostAsLargeAsPrevious && isPreviousLargeEnough && isNotContra) {
-                                for (StepListener stepListener : mStepListeners) {
-                                    stepListener.onStep();
-                                }
+                                mStepListener.onStep(mStep++);
                                 mLastMatch = extType;
                             }
                             else {
@@ -95,8 +86,38 @@ public class StepDetector implements SensorEventListener {
         }
     }
 
+    @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // TODO Auto-generated method stub
     }
 
+    public void start(){
+        if(!isRunning){
+            SensorManager appSensorManager = App.getSensorManager();
+            Sensor accSensor = appSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            appSensorManager.registerListener(StepDetector.this, accSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            Log.e("스타트", "스타트");
+            isRunning = true;
+        }
+    }
+
+    public void stop(){
+        if(!isRunning){
+            Log.e("정지", "정지");
+            isRunning = false;
+            SensorManager appSensorManager = App.getSensorManager();
+            appSensorManager.unregisterListener(StepDetector.this);
+        }
+    }
+
+    public void setStepListener(OnStepListener listener){
+        synchronized (this){
+            this.mStepListener = listener;
+        }
+    }
+
+
+    public interface OnStepListener{
+        void onStep(int step);
+    }
 }

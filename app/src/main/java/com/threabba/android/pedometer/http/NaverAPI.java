@@ -1,4 +1,4 @@
-package com.threabba.android2.http;
+package com.threabba.android.pedometer.http;
 
 import com.threabba.android2.model.Address;
 

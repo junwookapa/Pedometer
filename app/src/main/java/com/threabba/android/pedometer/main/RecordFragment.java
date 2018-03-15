@@ -1,4 +1,4 @@
-package com.threabba.android2.main;
+package com.threabba.android.pedometer.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.threabba.android2.App;
+import com.threabba.android.pedometer.App;
 import com.threabba.android.pedometer.R;
 import com.threabba.android.pedometer.db.DaoSession;
 import com.threabba.android.pedometer.db.Record;
@@ -19,8 +19,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 public class RecordFragment extends Fragment implements MainContract.View{
 
@@ -55,26 +53,11 @@ public class RecordFragment extends Fragment implements MainContract.View{
 
     @Override
     public void setPresenter(MainContract.Presenter presenter) {
-        presenter.getStepObserver().subscribe(new Observer<Integer>() {
-            @Override
-            public void onSubscribe(Disposable d) {
+        /*presenter.getStepObserver().subscribe(
+                value -> { // doSomething
+                    },
+                error ->{ // handle error
+                     });*/
 
-            }
-
-            @Override
-            public void onNext(Integer integer) {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
     }
 }

@@ -1,9 +1,6 @@
-package com.threabba.android2;
+package com.threabba.android.pedometer;
 
 import android.util.Log;
-
-import com.threabba.android2.step.RXStepDetector;
-import com.threabba.android2.step.StepDetector;
 
 import java.util.HashSet;
 import java.util.Set;

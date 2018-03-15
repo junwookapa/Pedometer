@@ -19,27 +19,21 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
-        android:name="com.threabba.android2.App">
-        <activity android:name="com.threabba.android2.main.MainActivity"
+        android:name=".App">
+        <activity android:name=".main.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".components.StepService"
-            android:enabled="true"
-            android:permission="android.permission.SYSTEM_ALERT_WINDOW" > <!-- 퍼미션 중요 -->
 
-        </service>
-        <service android:name="com.threabba.android2.flaoting.FloatingService"
+        <service android:name=".flaoting.FloatingService"
             android:enabled="true"
-            android:permission="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 퍼미션 중요 -->
+            android:permission="android.permission.SYSTEM_ALERT_WINDOW"
+            android:stopWithTask="true"
+            />
 
-        <service
-            android:name=".components.GPSService"
-            android:enabled="true"/>
         <provider
             android:name="com.threabba.android.pedometer.components.RecordContentProvider"
             android:authorities="com.threabba.android.pedometer.db.provider" />

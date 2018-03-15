@@ -14,7 +14,7 @@ import org.greenrobot.greendao.DaoLog;
 import org.greenrobot.greendao.database.StandardDatabase;
 import org.greenrobot.greendao.database.Database;
 
-import com.threabba.android.config.Const;
+import com.threabba.android.pedometer.R;
 import com.threabba.android.pedometer.db.DaoMaster;
 import com.threabba.android.pedometer.db.DaoSession;
 import com.threabba.android.pedometer.db.RecordDao;
@@ -54,7 +54,7 @@ public class RecordContentProvider extends ContentProvider {
     private SQLiteDatabase mDB;
     @Override
     public boolean onCreate() {
-        DaoMaster.DevOpenHelper masterHelper = new DaoMaster.DevOpenHelper(getContext(), Const.DB_NAME, null); //create database db file if not exist
+        DaoMaster.DevOpenHelper masterHelper = new DaoMaster.DevOpenHelper(getContext(), getContext().getString(R.string.db_name), null); //create database db file if not exist
         mDB = masterHelper.getWritableDatabase();  //get the created database db file
         DaoMaster master = new DaoMaster(mDB);//create masterDao
         daoSession =master.newSession(); //Creates Session session

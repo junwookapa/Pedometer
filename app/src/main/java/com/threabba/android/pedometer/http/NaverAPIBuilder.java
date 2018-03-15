@@ -1,15 +1,11 @@
-package com.threabba.android2.http;
+package com.threabba.android.pedometer.http;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import com.threabba.android2.App;
+import com.threabba.android.pedometer.App;
 import com.threabba.android.pedometer.R;
 
-import java.io.IOException;
-
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -20,16 +16,13 @@ public class NaverAPIBuilder {
 
     private static Retrofit createRetrofit(){
         OkHttpClient.Builder okClient = new OkHttpClient.Builder();
-        okClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request originalReq = chain.request();
-                Request.Builder requestBuilder = originalReq.newBuilder()
-                        .addHeader("X-Naver-Client-Id", App.getRes().getString(R.string.api_naver_client_id))
-                        .addHeader("X-Naver-Client-Secret", App.getRes().getString(R.string.api_naver_client_secret));
-                Request request = requestBuilder.build();
-                return chain.proceed(request);
-            }
+        okClient.addInterceptor(chain -> {
+            Request originalReq = chain.request();
+            Request.Builder requestBuilder = originalReq.newBuilder()
+                    .addHeader("X-Naver-Client-Id", App.getRes().getString(R.string.api_naver_client_id))
+                    .addHeader("X-Naver-Client-Secret", App.getRes().getString(R.string.api_naver_client_secret));
+            Request request = requestBuilder.build();
+            return chain.proceed(request);
         });
         retrofit = new Retrofit.Builder()
                 .baseUrl(baseURL)
@@ -37,9 +30,9 @@ public class NaverAPIBuilder {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okClient.build())
                 .build();
+
         return retrofit;
     }
-
     public static <T> T createAPI(Class<T> clazz){
         if(retrofit == null){
             retrofit = createRetrofit();

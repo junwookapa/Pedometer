@@ -1,16 +1,13 @@
-package com.threabba.android2.main;
+package com.threabba.android.pedometer.main;
 
 import android.Manifest;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.threabba.android.pedometer.R;
-import com.threabba.android2.BaseTabActivity;
-import com.threabba.android2.flaoting.FloatingService;
-import com.threabba.android2.flaoting.FloatingView;
+import com.threabba.android.pedometer.BaseTabActivity;
 
 import java.util.ArrayList;
 
@@ -24,11 +21,12 @@ public class MainActivity extends BaseTabActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new MainPresenter();
+        mPresenter = new MainPresenter(this);
         mPresenter.onInitialize();
         setupTab();
         TedPermission.with(this)
-                .setPermissionListener(new PermissionListener() {
+                .setPermissionListener(
+                        new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
 
@@ -45,7 +43,6 @@ public class MainActivity extends BaseTabActivity {
                 .setPermissions(
                         Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.SYSTEM_ALERT_WINDOW)
                 .check();
-        startService(new Intent(this, FloatingService.class));
     }
 
     @Override

@@ -1,7 +1,9 @@
-package com.threabba.android2.main;
+package com.threabba.android.pedometer.main;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+
+import com.threabba.android2.model.Address;
 
 import java.lang.ref.WeakReference;
 
@@ -16,6 +18,7 @@ public class MainContract {
     public interface Presenter{
         void onInitialize();
         Observable<Integer> getStepObserver();
+        Observable<Address> getAddressObserver();
     }
 
     public static <T extends Fragment & MainContract.View> Fragment createFragment(Class<T> clazz, Presenter presenter){
