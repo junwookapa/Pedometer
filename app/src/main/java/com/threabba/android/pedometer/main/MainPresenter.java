@@ -6,7 +6,7 @@ import android.util.Log;
 import com.threabba.android.pedometer.http.NaverAPI;
 import com.threabba.android.pedometer.http.NaverAPIBuilder;
 import com.threabba.android.pedometer.location.GPS;
-import com.threabba.android2.model.Address;
+import com.threabba.android.pedometer.model.Address;
 import com.threabba.android.pedometer.step.RXStepDetector;
 
 import java.util.HashMap;

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.threabba.android.pedometer.R;
-import com.threabba.android2.model.Address;
+import com.threabba.android.pedometer.model.Address;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -3,7 +3,7 @@ package com.threabba.android.pedometer.main;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import com.threabba.android2.model.Address;
+import com.threabba.android.pedometer.model.Address;
 
 import java.lang.ref.WeakReference;
 

@@ -1,6 +1,6 @@
 package com.threabba.android.pedometer.http;
 
-import com.threabba.android2.model.Address;
+import com.threabba.android.pedometer.model.Address;
 
 import java.util.Map;
 
